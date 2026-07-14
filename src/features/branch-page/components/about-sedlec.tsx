@@ -169,7 +169,7 @@ export function AboutSedlec() {
         <div className="grid gap-6 lg:grid-cols-2">
           {[
             { t: "Každý pokrok je důležitý", d: "Cesta k uzdravení bývá složena z mnoha malých kroků — někdy jde o první samostatnou chůzi po operaci, jindy o návrat běžných činností nebo znovuzískání jistoty a sebedůvěry. Podporujeme fyzickou kondici, psychickou pohodu i motivaci pokračovat.", img: `${P}/koupelna-2.jpg` },
-            { t: "Každý den může mít svou hodnotu", d: "U klientů domova nemusí být cílem návrat k dřívějšímu životu. Důležité může být zachování schopností, oblíbených zvyků a kontaktu s rodinou. Vytváříme prostor pro obyčejné okamžiky, které mají velkou hodnotu.", img: `${P}/spolecna.jpg` },
+            { t: "Každý den může mít svou hodnotu", d: "U klientů domova nemusí být cílem návrat k dřívějšímu životu. Důležité může být zachování schopností, oblíbených zvyků a kontaktu s rodinou. Vytváříme prostor pro obyčejné okamžiky, které mají velkou hodnotu.", img: `${P}/exterier-1.jpg` },
           ].map((c) => (
             <div key={c.t} className="overflow-hidden rounded-3xl border border-border bg-card">
               <Pic src={c.img} alt={c.t} rounded="rounded-none" className="aspect-[16/10]" />
@@ -186,7 +186,7 @@ export function AboutSedlec() {
       <section className="bg-secondary/40">
         <div className={`${wrap} grid items-center gap-10 py-16 lg:grid-cols-[1.4fr_1fr] lg:py-20`}>
           <div className="grid grid-cols-2 gap-4">
-            <Pic src={`${P}/pokoj-1.jpg`} alt="Pokoj" className="col-span-2 aspect-[16/10]" />
+            <Pic src={`${P}/exterier-2.jpg`} alt="Zázemí zařízení" className="col-span-2 aspect-[16/10]" />
             <Pic src={`${P}/pokoj-2.jpg`} alt="Pokoj" className="aspect-square" />
             <Pic src={`${P}/koupelna.jpg`} alt="Koupelna" className="aspect-square" />
           </div>
@@ -211,7 +211,7 @@ export function AboutSedlec() {
       {/* 7. ŽIVOT NENÍ JEN O PÉČI */}
       <section className={`${wrap} py-16 lg:py-20`}>
         <div className="grid gap-6 lg:grid-cols-2">
-          <Pic src={`${P}/spolecna.jpg`} alt="Život v domově" className="aspect-square" />
+          <Pic src={`${P}/hero.jpg`} alt="Život v domově" className="aspect-square" />
           <div className="flex flex-col justify-center">
             <h2 className="font-display text-3xl text-foreground sm:text-4xl">Každodennost tvoří chvíle, na které se můžeme těšit</h2>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
@@ -257,14 +257,18 @@ export function AboutSedlec() {
       </section>
 
       {/* 9. FOTOGALERIE */}
-      <section id="galerie" className={`${wrap} py-16 lg:py-20 scroll-mt-24`}>
-        <div className="text-center">
-          <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-warm-dark">Fotogalerie</div>
-          <h2 className="font-display mt-2 text-3xl text-foreground sm:text-4xl">Život u nás v Sedlci-Prčici</h2>
+      <section id="galerie" className="py-16 lg:py-20 scroll-mt-24">
+        <div className={wrap}>
+          <div className="text-center">
+            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-warm-dark">Fotogalerie</div>
+            <h2 className="font-display mt-2 text-3xl text-foreground sm:text-4xl">Život u nás v Sedlci-Prčici</h2>
+          </div>
         </div>
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="scrollbar-hide mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 lg:px-10">
           {GALLERY.map((g) => (
-            <Pic key={g} src={`${P}/${g}.jpg`} alt="Fotografie zařízení Sedlec-Prčice" className="aspect-square" rounded="rounded-2xl" />
+            <div key={g} className="relative aspect-square shrink-0 basis-[78%] snap-start overflow-hidden rounded-2xl bg-muted sm:basis-[48%] lg:basis-[280px]">
+              <Image src={`${P}/${g}.jpg`} alt="Fotografie zařízení Sedlec-Prčice" fill sizes="(min-width:1024px) 280px, (min-width:640px) 48vw, 78vw" className="object-cover" />
+            </div>
           ))}
         </div>
       </section>

@@ -4,8 +4,13 @@ import {
   ArrowRight, ArrowUpRight, Phone, Mail, Quote,
   Stethoscope, Home, Trees, HeartHandshake, ShieldCheck, UserCheck, Users,
   ClipboardList, Contact as ContactIcon, FileText, Briefcase,
+  BedDouble, MapPin, DoorOpen,
 } from "lucide-react";
 import { ChatCtaSection } from "@/features/branch-home/components/chat-cta-section";
+import { BiographicalConceptSection } from "@/features/branch-home/components/biographical-concept-section";
+import { GrantsSection } from "@/features/branch-home/components/eu-grant-section";
+import type { Branch } from "@/convex/lib/types";
+import type { BranchGrant } from "@/convex/lib/types";
 
 const MAP_URL = "https://www.google.com/maps?q=" + encodeURIComponent("AHC Centrum následné péče Sedlec-Prčice, Vítkovo náměstí 3, Sedlec-Prčice") + "&hl=cs&z=14&output=embed";
 
@@ -31,7 +36,8 @@ const QUICKLINKS = [
 ];
 
 /** Bespoke domovská stránka pro Sedlec-Prčice dle obsahové specifikace. */
-export function DomuSedlec({ facebookUrl }: { facebookUrl?: string }) {
+export function DomuSedlec({ branch, grants }: { branch: Branch | null; grants: BranchGrant[] }) {
+  const facebookUrl = branch?.facebook_url;
   return (
     <>
       {/* 1. HERO */}
@@ -215,26 +221,33 @@ export function DomuSedlec({ facebookUrl }: { facebookUrl?: string }) {
       </section>
 
       {/* NAŠE CENTRUM V KOSTCE */}
-      <section className="bg-secondary/40">
-        <div className={`${wrap} py-16 lg:py-20`}>
+      <section className="relative overflow-hidden bg-brand py-20 text-brand-foreground lg:py-24">
+        <div aria-hidden="true" className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-warm/15 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-brand-foreground/10 blur-3xl" />
+        <div className={`relative ${wrap}`}>
           <div className="text-center">
-            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-warm-dark">Přehled</div>
-            <h2 className="font-display mt-3 text-3xl text-foreground sm:text-4xl">Naše centrum v kostce</h2>
+            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-warm">V číslech</div>
+            <h2 className="font-display mt-3 text-3xl text-brand-foreground sm:text-4xl">Naše centrum v kostce</h2>
           </div>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mx-auto mt-14 grid w-full max-w-5xl grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
             {[
-              { value: "157", unit: "lůžek celkem", label: "Celková kapacita zařízení" },
-              { value: "27", unit: "km od Tábora", label: "V klidném Jihočeském kraji" },
-              { value: "54", unit: "lůžek DS", label: "Domov pro seniory" },
-              { value: "103", unit: "lůžek NP", label: "Následná lůžková péče" },
-            ].map((s) => (
-              <div key={s.unit} className="rounded-2xl border border-border bg-card p-6 text-center">
-                <div className="font-display text-4xl text-brand sm:text-5xl">{s.value}</div>
-                <div className="font-display mt-1 text-xl text-foreground">{s.unit}</div>
-                <div className="mt-2 text-sm text-muted-foreground">{s.label}</div>
-              </div>
-            ))}
-          </div>
+              { value: 157, unit: "lůžek celkem", icon: BedDouble },
+              { value: 27, unit: "km od Tábora", icon: MapPin },
+              { value: 54, unit: "lůžek DS", icon: Home },
+              { value: 103, unit: "lůžek NP", icon: Stethoscope },
+            ].map((s) => {
+              const Icon = s.icon;
+              return (
+                <li key={s.unit} className="group flex flex-col items-center text-center">
+                  <span className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-foreground/10 text-warm transition-all group-hover:bg-warm group-hover:text-warm-foreground">
+                    <Icon className="h-6 w-6" strokeWidth={1.75} />
+                  </span>
+                  <div className="font-display text-6xl text-brand-foreground lg:text-7xl">{s.value}</div>
+                  <div className="mt-3 max-w-[10ch] text-[11px] font-bold uppercase tracking-[0.22em] text-brand-foreground/70">{s.unit}</div>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </section>
 
@@ -274,6 +287,9 @@ export function DomuSedlec({ facebookUrl }: { facebookUrl?: string }) {
           </div>
         </div>
       </section>
+
+      {/* BIOGRAFICKÝ KONCEPT / ŽIVOT V CENTRU */}
+      <BiographicalConceptSection />
 
       {/* AI CHAT */}
       <ChatCtaSection />
@@ -375,6 +391,9 @@ export function DomuSedlec({ facebookUrl }: { facebookUrl?: string }) {
         </div>
       </section>
 
+      {/* DOTACE */}
+      {grants.length > 0 ? <GrantsSection grants={grants} /> : null}
+
       {/* SPOLUPRACUJEME */}
       <section className={`${wrap} py-12`}>
         <div className="text-center">
@@ -399,18 +418,16 @@ export function DomuSedlec({ facebookUrl }: { facebookUrl?: string }) {
 
       {/* 11. ZÁVĚREČNÁ VÝZVA */}
       <section className={`${wrap} pb-20`}>
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-[#1a1a2e] px-8 py-20 text-center text-white sm:px-14">
-          <div className="pointer-events-none absolute inset-0">
-            <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full bg-warm opacity-[0.07] blur-3xl" />
-            <div className="absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-brand opacity-[0.12] blur-3xl" />
-          </div>
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-brand-dark via-brand to-brand-dark px-8 py-20 text-center text-brand-foreground sm:px-14">
+          <div aria-hidden="true" className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-warm/15 blur-3xl" />
+          <div aria-hidden="true" className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-brand-foreground/10 blur-3xl" />
           <div className="relative">
             <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-warm">Připraveni pomoci</div>
-            <h2 className="font-display mx-auto mt-4 max-w-2xl text-3xl leading-tight sm:text-4xl">Jsme připraveni pomoci</h2>
-            <p className="mx-auto mt-4 max-w-xl text-white/75">Ať už hledáte následnou péči pro sebe, domov pro blízkého, nebo se potřebujete nejprve poradit, ozvěte se nám. Rádi vám představíme možnosti péče a pomůžeme s dalším postupem.</p>
+            <h2 className="font-display mx-auto mt-4 max-w-2xl text-3xl leading-tight text-brand-foreground sm:text-4xl">Jsme připraveni pomoci</h2>
+            <p className="mx-auto mt-4 max-w-xl text-brand-foreground/85">Ať už hledáte následnou péči pro sebe, domov pro blízkého, nebo se potřebujete nejprve poradit, ozvěte se nám. Rádi vám představíme možnosti péče a pomůžeme s dalším postupem.</p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Link href="/zadost-o-prijeti" className="rounded-full bg-white px-6 py-3 text-sm font-bold uppercase tracking-wider text-[#1a1a2e] transition-colors hover:bg-warm hover:text-warm-foreground">Jak požádat o přijetí</Link>
-              <Link href="/kontakt" className="inline-flex items-center gap-2 rounded-full border-2 border-white/30 px-6 py-3 text-sm font-bold uppercase tracking-wider text-white transition-colors hover:border-warm hover:text-warm">Kontaktovat nás <ArrowUpRight className="h-4 w-4" /></Link>
+              <Link href="/zadost-o-prijeti" className="rounded-full bg-brand-foreground px-6 py-3 text-sm font-bold uppercase tracking-wider text-brand transition-colors hover:bg-warm hover:text-warm-foreground">Jak požádat o přijetí</Link>
+              <Link href="/kontakt" className="inline-flex items-center gap-2 rounded-full border-2 border-brand-foreground/40 px-6 py-3 text-sm font-bold uppercase tracking-wider text-brand-foreground transition-colors hover:border-warm hover:text-warm">Kontaktovat nás <ArrowUpRight className="h-4 w-4" /></Link>
             </div>
           </div>
         </div>
