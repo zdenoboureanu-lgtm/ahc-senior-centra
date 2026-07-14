@@ -8,10 +8,15 @@ import { EmployeeStoriesSection } from "@/features/career/components/employee-st
 import { CareerBenefitsSection } from "@/features/career/components/benefits-section";
 import { AhcNumbersSection } from "@/features/career/components/ahc-numbers-section";
 import { CareerGallerySection } from "@/features/career/components/career-gallery-section";
-import { TeamioWidget } from "@/features/career/components/teamio-widget";
+import { TeamioWidget, TEAMIO_REGION } from "@/features/career/components/teamio-widget";
 import { CareerContactSection } from "@/features/career/components/career-contact-section";
 import { getBranchSlugFromHeaders } from "@/common/lib/branch";
+
 const BESPOKE_KARIERA: Record<string, () => React.ReactElement> = {};
+
+const BRANCH_LOCATION: Record<string, string> = {
+  "sedlec-prcice": TEAMIO_REGION.STREDOCESKY,
+};
 
 export default async function CareerPage({
   searchParams,
@@ -23,9 +28,11 @@ export default async function CareerPage({
   // čistou samostatnou stránku jen s detailem (bez marketingových sekcí).
   const isDetail = sp?.r === "detail" || sp?.id !== undefined;
 
+  const slug = await getBranchSlugFromHeaders();
+  const defaultLocationId = slug ? BRANCH_LOCATION[slug] : undefined;
+
   // Bespoke kariéra (per pobočka) — jen pro plný výpis, ne pro detail pozice.
   if (!isDetail) {
-    const slug = await getBranchSlugFromHeaders();
     const Bespoke = slug ? BESPOKE_KARIERA[slug] : undefined;
     if (Bespoke) return <Bespoke />;
   }
@@ -41,7 +48,7 @@ export default async function CareerPage({
           Zpět na volné pozice
         </Link>
         <div className="mt-8">
-          <TeamioWidget />
+          <TeamioWidget defaultLocationId={defaultLocationId} />
         </div>
         <RevealOnScroll>
           <CareerContactSection />
@@ -96,7 +103,7 @@ export default async function CareerPage({
           </section>
         </RevealOnScroll>
         <div className="mt-10">
-          <TeamioWidget />
+          <TeamioWidget defaultLocationId={defaultLocationId} />
         </div>
       </div>
 
