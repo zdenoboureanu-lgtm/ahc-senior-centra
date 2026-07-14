@@ -2,13 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight, ArrowUpRight, Phone, Mail, Quote,
-  Stethoscope, Home, Trees, HeartHandshake, ShieldCheck, UserCheck, Users,
+  Stethoscope, Home, Trees, HeartHandshake, ShieldCheck, UserCheck,
   ClipboardList, Contact as ContactIcon, FileText, Briefcase,
-  BedDouble, MapPin, DoorOpen,
+  BedDouble, MapPin,
 } from "lucide-react";
 import { ChatCtaSection } from "@/features/branch-home/components/chat-cta-section";
-import { BiographicalConceptSection } from "@/features/branch-home/components/biographical-concept-section";
 import { GrantsSection } from "@/features/branch-home/components/eu-grant-section";
+import { SedlecGallery } from "./sedlec-gallery";
 import type { Branch } from "@/convex/lib/types";
 import type { BranchGrant } from "@/convex/lib/types";
 
@@ -197,28 +197,8 @@ export function DomuSedlec({ branch, grants }: { branch: Branch | null; grants: 
         </figure>
       </section>
 
-      {/* A TAK SI TADY ŽIJEME */}
-      <section className="py-16 lg:py-20">
-        <div className={wrap}>
-          <div className="text-center">
-            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-warm-dark">Fotogalerie</div>
-            <h2 className="font-display mt-3 text-3xl text-foreground sm:text-4xl">A tak si tady žijeme</h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">Každý den je jiný. Podívejte se, jak vypadá běžný život v AHC Centru následné péče Sedlec-Prčice.</p>
-          </div>
-        </div>
-        <div className="scrollbar-hide mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 lg:px-10">
-          {["g-21", "g-13", "g-30", "g-07", "g-16", "g-01", "g-50", "g-04"].map((g) => (
-            <div key={g} className="relative aspect-square shrink-0 basis-[78%] snap-start overflow-hidden rounded-2xl bg-muted sm:basis-[48%] lg:basis-[280px]">
-              <Image src={`${P}/${g}.jpg`} alt="Život v AHC Centru Sedlec-Prčice" fill sizes="(min-width:1024px) 280px, (min-width:640px) 48vw, 78vw" className="object-cover" />
-            </div>
-          ))}
-        </div>
-        <div className={`${wrap} mt-8 text-center`}>
-          <Link href="/o-nas" className="inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-wider text-brand hover:gap-2.5">
-            Poznat nás blíže <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </section>
+      {/* FOTOGALERIE — FACILITIES STYLE */}
+      <SedlecGallery />
 
       {/* NAŠE CENTRUM V KOSTCE */}
       <section className="relative overflow-hidden bg-brand py-20 text-brand-foreground lg:py-24">
@@ -288,70 +268,47 @@ export function DomuSedlec({ branch, grants }: { branch: Branch | null; grants: 
         </div>
       </section>
 
-      {/* BIOGRAFICKÝ KONCEPT / ŽIVOT V CENTRU */}
-      <BiographicalConceptSection />
-
       {/* AI CHAT */}
       <ChatCtaSection />
 
-      {/* CO NOVÉHO U NÁS — FACEBOOK */}
-      {facebookUrl && (
-        <section className={`${wrap} py-16 lg:py-20`}>
-          <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
-            {/* 3D Facebook mockup */}
-            <div className="shrink-0" style={{ perspective: "1200px" }}>
-              <div
-                className="w-72 overflow-hidden rounded-2xl bg-white shadow-[0_30px_80px_-10px_rgba(0,0,0,0.18)]"
-                style={{ transform: "rotateY(-10deg) rotateX(4deg)" }}
-              >
-                <div className="px-4 pt-4">
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">AHC</div>
-                    <div>
-                      <div className="text-sm font-semibold text-gray-900">AHC.cz</div>
-                      <div className="text-[11px] text-gray-500">2. duben v 16:07 · 🌐</div>
-                    </div>
-                    <span className="ml-auto text-gray-400">···</span>
-                  </div>
-                  <p className="mt-2.5 text-sm text-gray-800">🐣 Velikonoce, které spojují generace <span className="cursor-pointer text-blue-600">Zobrazit více</span></p>
-                </div>
-                <div className="mt-2.5 grid grid-cols-2 gap-px bg-gray-200">
-                  <div className="relative col-span-1 row-span-2" style={{ aspectRatio: "1" }}>
-                    <Image src={`${P}/pokoj-2.jpg`} alt="Fotka ze sociálních sítí AHC" fill sizes="144px" className="object-cover" />
-                  </div>
-                  <div className="relative" style={{ aspectRatio: "1" }}>
-                    <Image src={`${P}/exterier-2.jpg`} alt="Fotka ze sociálních sítí AHC" fill sizes="100px" className="object-cover" />
-                  </div>
-                  <div className="relative" style={{ aspectRatio: "1" }}>
-                    <Image src={`${P}/koupelna-2.jpg`} alt="Fotka ze sociálních sítí AHC" fill sizes="100px" className="object-cover" />
-                  </div>
-                </div>
-                <div className="flex gap-4 border-t border-gray-100 px-4 py-2.5 text-xs font-medium text-gray-600">
-                  <span className="flex items-center gap-1.5">👍 To se mi líbí</span>
-                  <span className="flex items-center gap-1.5">💬 Komentář</span>
-                </div>
+      {/* ŽIVOT V CENTRU KAŽDÝ DEN */}
+      <section className={`${wrap} py-16 lg:py-20`}>
+        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          {/* Fotogrid */}
+          <div className="grid grid-cols-3 grid-rows-2 gap-2">
+            {(["g-01", "g-04", "g-07", "g-13", "g-16"] as const).map((g) => (
+              <div key={g} className="relative aspect-square overflow-hidden rounded-xl bg-muted">
+                <Image src={`${P}/${g}.jpg`} alt="Život v centru" fill sizes="30vw" className="object-cover" />
+              </div>
+            ))}
+            <div className="relative aspect-square overflow-hidden rounded-xl bg-muted">
+              <Image src={`${P}/g-21.jpg`} alt="Život v centru" fill sizes="30vw" className="object-cover brightness-50" />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="font-display text-2xl font-bold text-white">+7</span>
               </div>
             </div>
+          </div>
 
-            {/* Text */}
-            <div className="max-w-md">
-              <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-warm-dark">Aktuality</div>
-              <h2 className="font-display mt-3 text-3xl text-foreground sm:text-4xl">Co nového u nás?</h2>
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                Všechny novinky, aktuality a zprávy o dění dáváme na náš Facebook, takže sledujte, aby vám nic neuteklo!
-              </p>
+          {/* Text */}
+          <div>
+            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-warm-dark">Aktuality</div>
+            <h2 className="font-display mt-3 text-3xl text-foreground sm:text-4xl">Život v centru každý den.</h2>
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+              Tvoření, zpívání, společné výlety i klidné chvíle — každý den u nás přináší něco nového. Sledujte nás na Facebooku a buďte v obraze o akcích, novinkách i každodenním dění.
+            </p>
+            {facebookUrl && (
               <a
                 href={facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-foreground hover:bg-brand-dark"
               >
-                Náš Facebook <ArrowUpRight className="h-4 w-4" />
+                Sledovat náš Facebook <ArrowUpRight className="h-4 w-4" />
               </a>
-            </div>
+            )}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* 9. KONVERZE */}
       <section className="bg-secondary/40">

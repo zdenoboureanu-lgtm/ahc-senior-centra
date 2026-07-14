@@ -14,6 +14,7 @@ import {
   Footprints,
   Quote,
 } from "lucide-react";
+import { SedlecGallery, ACTIVITY_ITEMS } from "./sedlec-gallery";
 
 const wrap = "mx-auto max-w-[1320px] px-6 lg:px-10";
 
@@ -72,8 +73,6 @@ const STORIES = [
   { q: "Na rehabilitaci je krásné sledovat, jak se pacientům postupně vrací síla, samostatnost a chuť do života. Někdy jde o malé pokroky, ale právě ty bývají nejdůležitější.", a: "Petra, fyzioterapeutka" },
   { q: "Moderní zdravotní péče je důležitá, ale stejně důležité je pacientovi naslouchat, podpořit ho a dodat mu motivaci. Právě spojení odbornosti a lidského přístupu tvoří základ naší práce.", a: "Tým AHC Centra následné péče Sedlec-Prčice" },
 ];
-
-const GALLERY = ["g-30", "g-13", "g-16", "g-07", "g-21", "g-01", "g-50", "g-04"];
 
 /** Bespoke podstránka „O zařízení" pro Sedlec-Prčice dle obsahové specifikace. */
 export function AboutSedlec() {
@@ -257,21 +256,14 @@ export function AboutSedlec() {
       </section>
 
       {/* 9. FOTOGALERIE */}
-      <section id="galerie" className="py-16 lg:py-20 scroll-mt-24">
-        <div className={wrap}>
-          <div className="text-center">
-            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-warm-dark">Fotogalerie</div>
-            <h2 className="font-display mt-2 text-3xl text-foreground sm:text-4xl">Život u nás v Sedlci-Prčici</h2>
-          </div>
-        </div>
-        <div className="scrollbar-hide mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-4 lg:px-10">
-          {GALLERY.map((g) => (
-            <div key={g} className="relative aspect-square shrink-0 basis-[78%] snap-start overflow-hidden rounded-2xl bg-muted sm:basis-[48%] lg:basis-[280px]">
-              <Image src={`${P}/${g}.jpg`} alt="Fotografie zařízení Sedlec-Prčice" fill sizes="(min-width:1024px) 280px, (min-width:640px) 48vw, 78vw" className="object-cover" />
-            </div>
-          ))}
-        </div>
-      </section>
+      <div id="galerie" className="scroll-mt-24">
+        <SedlecGallery
+          items={ACTIVITY_ITEMS}
+          subtitle="Fotogalerie"
+          title="Život u nás v Sedlci-Prčici"
+          description="Každý den je jiný. Podívejte se, jak vypadá běžný život v AHC Centru následné péče Sedlec-Prčice."
+        />
+      </div>
 
       {/* 10. PŘÍBĚHY */}
       <section className="bg-secondary/40">
