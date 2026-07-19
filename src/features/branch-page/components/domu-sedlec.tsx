@@ -276,15 +276,15 @@ export function DomuSedlec({ branch, grants }: { branch: Branch | null; grants: 
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Fotogrid */}
           <div className="grid grid-cols-3 grid-rows-2 gap-2">
-            {(["g-01", "g-04", "g-07", "g-13", "g-16"] as const).map((g) => (
+            {["fb-01", "fb-02", "fb-03", "fb-04", "fb-05"].map((g) => (
               <div key={g} className="relative aspect-square overflow-hidden rounded-xl bg-muted">
-                <Image src={`${P}/${g}.jpg`} alt="Život v centru" fill sizes="30vw" className="object-cover" />
+                <Image src={`${P}/${g}.jpg`} alt="Život v AHC Centru Sedlec-Prčice" fill sizes="30vw" className="object-cover" />
               </div>
             ))}
             <div className="relative aspect-square overflow-hidden rounded-xl bg-muted">
-              <Image src={`${P}/g-21.jpg`} alt="Život v centru" fill sizes="30vw" className="object-cover brightness-50" />
+              <Image src={`${P}/fb-06.jpg`} alt="Aktivity v centru" fill sizes="30vw" className="object-cover brightness-50" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="font-display text-2xl font-bold text-white">+7</span>
+                <span className="font-display text-2xl font-bold text-white">+více</span>
               </div>
             </div>
           </div>
@@ -301,9 +301,9 @@ export function DomuSedlec({ branch, grants }: { branch: Branch | null; grants: 
                 href={facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-foreground hover:bg-brand-dark"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-brand px-7 py-3.5 text-sm font-semibold text-brand-foreground shadow-md shadow-brand/20 hover:bg-brand-dark"
               >
-                Sledovat náš Facebook <ArrowUpRight className="h-4 w-4" />
+                Sledujte dění v našem domově na Facebooku <ArrowUpRight className="h-4 w-4 shrink-0" />
               </a>
             )}
           </div>
