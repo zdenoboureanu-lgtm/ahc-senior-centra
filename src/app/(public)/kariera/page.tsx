@@ -8,15 +8,12 @@ import { EmployeeStoriesSection } from "@/features/career/components/employee-st
 import { CareerBenefitsSection } from "@/features/career/components/benefits-section";
 import { AhcNumbersSection } from "@/features/career/components/ahc-numbers-section";
 import { CareerGallerySection } from "@/features/career/components/career-gallery-section";
-import { TeamioWidget, TEAMIO_REGION } from "@/features/career/components/teamio-widget";
+import { TeamioWidget } from "@/features/career/components/teamio-widget";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "@/convex/_generated/api";
 import { CareerContactSection } from "@/features/career/components/career-contact-section";
 import { getBranchSlugFromHeaders } from "@/common/lib/branch";
-
-const BESPOKE_KARIERA: Record<string, () => React.ReactElement> = {};
-
-const BRANCH_LOCATION: Record<string, string> = {
-  "sedlec-prcice": TEAMIO_REGION.STREDOCESKY,
-};
+import { loadBranchPageContext } from "@/features/inline-edit/load-copy";
 
 export default async function CareerPage({
   searchParams,
@@ -29,13 +26,19 @@ export default async function CareerPage({
   const isDetail = sp?.r === "detail" || sp?.id !== undefined;
 
   const slug = await getBranchSlugFromHeaders();
-  const defaultLocationId = slug ? BRANCH_LOCATION[slug] : undefined;
-
-  // Bespoke kariéra (per pobočka) — jen pro plný výpis, ne pro detail pozice.
-  if (!isDetail) {
-    const Bespoke = slug ? BESPOKE_KARIERA[slug] : undefined;
-    if (Bespoke) return <Bespoke />;
-  }
+  // Kraj pobočky předvolíme ve filtru, ať jsou první pozice z okolí.
+  const branch = slug
+    ? await fetchQuery(api.modules.branches.queries.getBySlug, { slug }).catch(
+        () => null
+      )
+    : null;
+  const defaultRegion = branch?.region;
+  // Přepsané texty a fotky pobočky — kariéra je společná, ale každá pobočka
+  // si ji může upravit přímo na webu.
+  const copyProps = slug
+    ? await loadBranchPageContext(slug)
+    : { copy: {}, editBranchId: undefined };
+  const edit = { copy: copyProps.copy, editBranchId: copyProps.editBranchId };
 
   if (isDetail) {
     return (
@@ -48,10 +51,10 @@ export default async function CareerPage({
           Zpět na volné pozice
         </Link>
         <div className="mt-8">
-          <TeamioWidget defaultLocationId={defaultLocationId} />
+          <TeamioWidget defaultRegion={defaultRegion} />
         </div>
         <RevealOnScroll>
-          <CareerContactSection />
+          <CareerContactSection {...edit} />
         </RevealOnScroll>
       </section>
     );
@@ -59,30 +62,30 @@ export default async function CareerPage({
 
   return (
     <>
-      <CareerHero />
+      <CareerHero {...edit} />
 
       <RevealOnScroll>
-        <WhyAhcSection />
+        <WhyAhcSection {...edit} />
       </RevealOnScroll>
 
       <RevealOnScroll>
-        <TeamDaySection />
+        <TeamDaySection {...edit} />
       </RevealOnScroll>
 
       <RevealOnScroll>
-        <EmployeeStoriesSection />
+        <EmployeeStoriesSection {...edit} />
       </RevealOnScroll>
 
       <RevealOnScroll>
-        <CareerBenefitsSection />
+        <CareerBenefitsSection {...edit} />
       </RevealOnScroll>
 
       <RevealOnScroll>
-        <AhcNumbersSection />
+        <AhcNumbersSection {...edit} />
       </RevealOnScroll>
 
       <RevealOnScroll>
-        <CareerGallerySection />
+        <CareerGallerySection {...edit} />
       </RevealOnScroll>
 
       {/* Volné pozice — živě z Teamia (LMC). Kotva pro hero CTA. */}
@@ -103,12 +106,12 @@ export default async function CareerPage({
           </section>
         </RevealOnScroll>
         <div className="mt-10">
-          <TeamioWidget defaultLocationId={defaultLocationId} />
+          <TeamioWidget defaultRegion={defaultRegion} />
         </div>
       </div>
 
       <RevealOnScroll>
-        <CareerContactSection />
+        <CareerContactSection {...edit} />
       </RevealOnScroll>
     </>
   );

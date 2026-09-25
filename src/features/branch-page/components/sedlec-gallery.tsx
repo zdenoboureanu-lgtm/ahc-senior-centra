@@ -4,10 +4,11 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { makeCopy, type CopyProps } from "@/features/inline-edit/copy";
 
 const P = "/images/sedlec";
 
-interface GalleryItem { src: string; label: string }
+export interface GalleryItem { src: string; label: string }
 
 const FACILITY_ITEMS: GalleryItem[] = [
   { src: `${P}/pokoj-1.jpg`, label: "Dvoulůžkový pokoj" },
@@ -33,19 +34,25 @@ export const ACTIVITY_ITEMS: GalleryItem[] = [
 
 const wrap = "mx-auto max-w-[1320px] px-6 lg:px-10";
 
-interface SedlecGalleryProps {
+interface PhotoGalleryProps extends CopyProps {
   items?: GalleryItem[];
   subtitle?: string;
   title?: string;
   description?: string;
+  /** Rozlišuje klíče, když je na webu víc galerií (zázemí vs. aktivity). */
+  copyPrefix?: string;
 }
 
-export function SedlecGallery({
+export function PhotoGallery({
   items = FACILITY_ITEMS,
   subtitle = "Zázemí",
   title = "Jak to u nás vypadá",
   description = "Pohodlné pokoje, společenské prostory a zahrada — vše promyšlené pro klidný a důstojný život.",
-}: SedlecGalleryProps) {
+  copyPrefix = "galerie",
+  copy,
+  editBranchId,
+}: PhotoGalleryProps) {
+  const c = makeCopy({ copy, editBranchId });
   const scrollerRef = useRef<HTMLUListElement>(null);
   const [scrollState, setScrollState] = useState({ left: 0, max: 1 });
 
@@ -82,9 +89,9 @@ export function SedlecGallery({
       <div className={`relative ${wrap} py-16 lg:py-20`}>
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
-            <div className="text-xs font-bold uppercase tracking-[0.22em] text-warm-dark">{subtitle}</div>
-            <h2 className="font-display mt-4 text-4xl text-foreground lg:text-5xl">{title}</h2>
-            <p className="mt-4 text-base text-muted-foreground sm:text-lg">{description}</p>
+            {c.t(`${copyPrefix}.eyebrow`, subtitle, { as: "div", className: "text-xs font-bold uppercase tracking-[0.22em] text-warm-dark" })}
+            {c.t(`${copyPrefix}.nadpis`, title, { as: "h2", className: "font-display mt-4 text-4xl text-foreground lg:text-5xl" })}
+            {c.t(`${copyPrefix}.text`, description, { as: "p", className: "mt-4 text-base text-muted-foreground sm:text-lg" })}
           </div>
           <div className="flex gap-2">
             <button
@@ -127,7 +134,7 @@ export function SedlecGallery({
             className="scrollbar-hide flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-4 lg:px-10"
             aria-roledescription="carousel"
           >
-            {items.map((item) => (
+            {items.map((item, i) => (
               <li
                 key={item.src}
                 className="shrink-0 grow-0 basis-[78%] snap-start sm:basis-[48%] lg:basis-[300px]"
@@ -135,15 +142,16 @@ export function SedlecGallery({
               >
                 <figure className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted shadow-sm transition-shadow hover:shadow-lg">
                   <Image
-                    src={item.src}
+                    src={c.s(`${copyPrefix}.${i}.foto`, item.src)}
                     alt={item.label}
                     fill
                     sizes="(min-width:1024px) 22vw, 78vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-dark/85 via-brand-dark/15 to-transparent" />
-                  <figcaption className="absolute inset-x-0 bottom-0 p-5">
-                    <div className="font-display text-xl text-brand-foreground">{item.label}</div>
+                  {c.img(`${copyPrefix}.${i}.foto`)}
+                  <figcaption className="absolute inset-x-0 bottom-0 z-30 p-5">
+                    {c.t(`${copyPrefix}.${i}.popisek`, item.label, { as: "div", className: "font-display text-xl text-brand-foreground" })}
                   </figcaption>
                 </figure>
               </li>
@@ -154,3 +162,6 @@ export function SedlecGallery({
     </section>
   );
 }
+
+/** Historický název — Sedlec-Prčice na něj odkazuje ve svých stránkách. */
+export { PhotoGallery as SedlecGallery };

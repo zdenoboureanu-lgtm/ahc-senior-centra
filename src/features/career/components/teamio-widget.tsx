@@ -18,29 +18,38 @@ const LMC_CONFIG = {
   themes: ["base"],
 };
 
-/** Region value IDs from the widget's location select. */
-export const TEAMIO_REGION = {
-  STREDOCESKY: "R206696",
-  USTECKY: "R238671",
-  PLZENSKY: "R230064",
-  KARLOVARSKY: "R235864",
-  KRALOVEHRADECKY: "R249811",
-} as const;
+/** Porovnání názvů krajů bez ohledu na diakritiku a velikost písmen. */
+function normalizeRegion(text: string): string {
+  return text
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/\s*kraj\s*/g, "")
+    .trim();
+}
 
-export function TeamioWidget({ defaultLocationId }: { defaultLocationId?: string }) {
+/**
+ * @param defaultRegion Název kraje pobočky („Plzeňský kraj"). Ve výpisu se
+ * předvolí, aby návštěvník viděl nejdřív pozice ze svého okolí. Hledáme podle
+ * názvu v nabídce widgetu — Teamio interní ID se nemusí udržovat ručně.
+ */
+export function TeamioWidget({ defaultRegion }: { defaultRegion?: string }) {
   useEffect(() => {
-    if (!defaultLocationId) return;
+    if (!defaultRegion) return;
+    const wanted = normalizeRegion(defaultRegion);
 
     const trySet = () => {
       const select = document.querySelector<HTMLSelectElement>(
         "#capybara .cp-filter__select--location"
       );
-      if (select && select.value !== defaultLocationId) {
-        select.value = defaultLocationId;
-        select.dispatchEvent(new Event("change", { bubbles: true }));
-        return true;
-      }
-      return false;
+      if (!select || select.options.length <= 1) return false;
+      const match = Array.from(select.options).find(
+        (o) => o.value && normalizeRegion(o.textContent ?? "") === wanted
+      );
+      if (!match || select.value === match.value) return Boolean(match);
+      select.value = match.value;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      return true;
     };
 
     if (trySet()) return;
@@ -49,7 +58,7 @@ export function TeamioWidget({ defaultLocationId }: { defaultLocationId?: string
     const obs = new MutationObserver(() => { if (trySet()) obs.disconnect(); });
     obs.observe(el, { childList: true, subtree: true });
     return () => obs.disconnect();
-  }, [defaultLocationId]);
+  }, [defaultRegion]);
 
   return (
     <div className="mx-auto max-w-[1320px] px-6 pb-8 lg:px-10">
@@ -60,6 +69,17 @@ export function TeamioWidget({ defaultLocationId }: { defaultLocationId?: string
           flex-direction: column !important;
           align-items: flex-start !important;
           gap: 16px !important;
+        }
+        /* Nadpis filtru „Vyhledávání" byl výrazně oranžový a přebíjel obsah. */
+        #capybara .cp-filter__title,
+        #capybara .cp-filter h2,
+        #capybara .cp-filter h3 {
+          font-size: 11px !important;
+          font-weight: 700 !important;
+          letter-spacing: 0.22em !important;
+          text-transform: uppercase !important;
+          color: hsl(var(--muted-foreground)) !important;
+          margin-bottom: 4px !important;
         }
       `}</style>
 

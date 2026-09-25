@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>AHC — rozcestník poboček</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; }
+  img, picture, svg { display: block; max-width: 100%; }
+</style>
+</head>
+<body>
+
+
+<style>
+  :root {
+    --paper: #F6F2EF;
+    --surface: #FFFFFF;
+    --surface-2: #EFEAE6;
+    --ink: #123036;
+    --ink-2: #3E585F;
+    --slate: #6E8085;
+    --line: #DFD8D2;
+    --petrol: #24606A;
+    --petrol-soft: #E4EDEE;
+    --ember: #E86430;
+    --ember-soft: #FBE7DD;
+    --ok: #2F7A55;
+
+    --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+    --measure: 62ch;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #0D1A1D;
+      --surface: #14262A;
+      --surface-2: #192E33;
+      --ink: #E7EFEF;
+      --ink-2: #B6C8CB;
+      --slate: #8CA1A5;
+      --line: #24444A;
+      --petrol: #7FC3CE;
+      --petrol-soft: #1A343A;
+      --ember: #FF9160;
+      --ember-soft: #35211A;
+      --ok: #6BC495;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #0D1A1D;
+    --surface: #14262A;
+    --surface-2: #192E33;
+    --ink: #E7EFEF;
+    --ink-2: #B6C8CB;
+    --slate: #8CA1A5;
+    --line: #24444A;
+    --petrol: #7FC3CE;
+    --petrol-soft: #1A343A;
+    --ember: #FF9160;
+    --ember-soft: #35211A;
+    --ok: #6BC495;
+  }
+
+  :root[data-theme="light"] {
+    --paper: #F6F2EF;
+    --surface: #FFFFFF;
+    --surface-2: #EFEAE6;
+    --ink: #123036;
+    --ink-2: #3E585F;
+    --slate: #6E8085;
+    --line: #DFD8D2;
+    --petrol: #24606A;
+    --petrol-soft: #E4EDEE;
+    --ember: #E86430;
+    --ember-soft: #FBE7DD;
+    --ok: #2F7A55;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 64px) clamp(18px, 4vw, 40px) 80px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ember);
+  }
+
+  h1 {
+    font-size: clamp(30px, 5.2vw, 46px);
+    line-height: 1.06;
+    letter-spacing: -0.032em;
+    font-weight: 800;
+    margin: 14px 0 0;
+    text-wrap: balance;
+  }
+
+  .lede {
+    max-width: var(--measure);
+    margin: 16px 0 0;
+    font-size: 16px;
+    color: var(--ink-2);
+  }
+
+  /* ---- stav ---- */
+  .status {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+    gap: 1px;
+    margin: 32px 0 0;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .status div {
+    background: var(--surface);
+    padding: 16px 18px;
+  }
+
+  .status dt {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+
+  .status dd {
+    margin: 6px 0 0;
+    font-size: 24px;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .status dd span {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ok);
+    letter-spacing: 0;
+    margin-left: 6px;
+  }
+
+  /* ---- jak to funguje ---- */
+  .note {
+    margin: 26px 0 0;
+    padding: 16px 18px;
+    background: var(--petrol-soft);
+    border-radius: 12px;
+    font-size: 14px;
+    color: var(--ink-2);
+    max-width: var(--measure);
+  }
+
+  .note strong { color: var(--ink); font-weight: 700; }
+
+  .note code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12.5px;
+    background: var(--surface);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  /* ---- kraje ---- */
+  .region {
+    margin-top: 46px;
+  }
+
+  .region-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .region-head h2 {
+    font-size: 15px;
+    font-weight: 750;
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+
+  .region-head .count {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--slate);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 18px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .card-top {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .chip {
+    align-self: flex-start;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--petrol);
+    background: var(--petrol-soft);
+    padding: 4px 9px;
+    border-radius: 999px;
+  }
+
+  .chip.med {
+    color: var(--ember);
+    background: var(--ember-soft);
+  }
+
+  .card h3 {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    font-weight: 700;
+    text-wrap: balance;
+  }
+
+  .card h3 a {
+    color: var(--ink);
+    text-decoration: none;
+    background-image: linear-gradient(var(--ember), var(--ember));
+    background-size: 0% 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.22s ease;
+  }
+
+  .card h3 a:hover,
+  .card h3 a:focus-visible {
+    background-size: 100% 2px;
+  }
+
+  .place {
+    font-size: 13px;
+    color: var(--slate);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 2px;
+    border-top: 1px solid var(--line);
+    margin-top: auto;
+    padding-top: 12px;
+  }
+
+  .links a {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--petrol);
+    text-decoration: none;
+    padding: 4px 9px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .links a:hover,
+  .links a:focus-visible {
+    border-color: var(--petrol);
+    color: var(--ink);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 12.5px;
+    color: var(--slate);
+  }
+
+  .meta a {
+    color: var(--slate);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .meta a:hover { color: var(--ink); border-color: var(--petrol); }
+
+  .meta .nofb { color: var(--slate); opacity: 0.7; font-style: italic; }
+
+  a:focus-visible {
+    outline: 2px solid var(--ember);
+    outline-offset: 2px;
+  }
+
+  footer {
+    margin-top: 56px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--slate);
+    max-width: var(--measure);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Nasazeno na produkci</div>
+    <h1>Weby AHC — 17 poboček k nahlédnutí</h1>
+    <p class="lede">
+      Všechna zařízení z tabulky „Weby AHC" mají nasazený web s obsahem
+      z klientských dokumentů, fotkami z Disku a soubory ke stažení.
+      Klikněte na název pobočky nebo rovnou na konkrétní podstránku.
+    </p>
+
+    <dl class="status">
+      <div>
+        <dt>Poboček</dt>
+        <dd>17</dd>
+      </div>
+      <div>
+        <dt>Stránek ověřeno</dt>
+        <dd>136 <span>0 chyb</span></dd>
+      </div>
+      <div>
+        <dt>Staré URL (SEO)</dt>
+        <dd>349 <span>0 chyb</span></dd>
+      </div>
+      <div>
+        <dt>Dokumentů</dt>
+        <dd>97</dd>
+      </div>
+      <div>
+        <dt>Fotek</dt>
+        <dd>271</dd>
+      </div>
+    </dl>
+
+    <p class="note">
+      <strong>Jak to funguje:</strong> dokud nejsou nastavené ostré subdomény
+      (<code>pecicky.ahc.cz</code>), pozná web pobočku podle parametru
+      <code>?branch=</code> v odkazu. Uvnitř webu už se pobočka drží sama,
+      takže se dá normálně proklikat. Všechny staré adresy se přesměrovávají
+      na nové, takže pozice v Googlu zůstávají zachované.
+    </p>
+  </header>
+
+  <section class="region">
+    <div class="region-head">
+      <h2>Středočeský kraj</h2>
+      <span class="count">5 zařízení</span>
+    </div>
+    <div class="cards">
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip">Domov se zvláštním režimem</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=pecicky" target="_blank" rel="noopener">AHC Domov se zvláštním režimem Pečičky</a></h3>
+          <div class="place">Pečice · Středočeský kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 702 080 974</span>
+          <span class="nofb">bez Facebooku</span>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=pecicky" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=pecicky" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=pecicky" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=pecicky" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=pecicky" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=pecicky" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip">Domov se zvláštním režimem</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=pribram" target="_blank" rel="noopener">AHC Domov se zvláštním režimem Příbram</a></h3>
+          <div class="place">Příbram · Středočeský kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 777 111 198</span>
+          <a href="https://www.facebook.com/ahcseniorcentrumpribram" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=pribram" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=pribram" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=pribram" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=pribram" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=pribram" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=pribram" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip">Senior centrum</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=kolin" target="_blank" rel="noopener">AHC Senior centrum Kolín</a></h3>
+          <div class="place">Kolín II · Středočeský kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 778 000 771</span>
+          <a href="https://www.facebook.com/SeniorcentrumKolin" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=kolin" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=kolin" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=kolin" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=kolin" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=kolin" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=kolin" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip med">Centrum následné péče</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=sedlec-prcice" target="_blank" rel="noopener">AHC Centrum následné péče Sedlec-Prčice</a></h3>
+          <div class="place">Sedlec-Prčice · Středočeský kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 317 834 311</span>
+          <a href="https://www.facebook.com/ahcsedlecprcice" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=sedlec-prcice" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=sedlec-prcice" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=sedlec-prcice" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=sedlec-prcice" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=sedlec-prcice" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=sedlec-prcice" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip">Senior centrum</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=novestraseci" target="_blank" rel="noopener">AHC Senior centrum Nové Strašecí</a></h3>
+          <div class="place">Nové Strašecí · Středočeský kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 734 750 821</span>
+          <a href="https://www.facebook.com/profile.php?id=100064139706050" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=novestraseci" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=novestraseci" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=novestraseci" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=novestraseci" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=novestraseci" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=novestraseci" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="region">
+    <div class="region-head">
+      <h2>Ústecký kraj</h2>
+      <span class="count">4 zařízení</span>
+    </div>
+    <div class="cards">
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip med">Nemocnice</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=duchcov" target="_blank" rel="noopener">AHC Nemocnice Duchcov</a></h3>
+          <div class="place">Duchcov · Ústecký kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 417 514 711</span>
+          <a href="https://www.facebook.com/ahcnemocniceduchcov" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/oddeleni?branch=duchcov" target="_blank" rel="noopener">Oddělení</a>
+          <a href="https://ahc-stribro.vercel.app/ambulance?branch=duchcov" target="_blank" rel="noopener">Ambulance</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=duchcov" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=duchcov" target="_blank" rel="noopener">O nemocnici</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=duchcov" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=duchcov" target="_blank" rel="noopener">Kontakt</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip med">Centrum následné péče</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=podborany" target="_blank" rel="noopener">AHC Centrum následné péče Podbořany</a></h3>
+          <div class="place">Podbořany · Ústecký kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 415 237 111</span>
+          <span class="nofb">bez Facebooku</span>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/oddeleni?branch=podborany" target="_blank" rel="noopener">Oddělení</a>
+          <a href="https://ahc-stribro.vercel.app/ambulance?branch=podborany" target="_blank" rel="noopener">Ambulance</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=podborany" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=podborany" target="_blank" rel="noopener">O zařízení</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=podborany" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=podborany" target="_blank" rel="noopener">Kontakt</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip med">Rehabilitační centrum</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=rehabilitacnicentrummezibori" target="_blank" rel="noopener">AHC Rehabilitační centrum Meziboří</a></h3>
+          <div class="place">Meziboří · Ústecký kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 725 395 643</span>
+          <a href="https://www.facebook.com/ahcrehabilitacnicentrummezibori" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=rehabilitacnicentrummezibori" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=rehabilitacnicentrummezibori" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=rehabilitacnicentrummezibori" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=rehabilitacnicentrummezibori" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=rehabilitacnicentrummezibori" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip">Senior centrum</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=mezibori" target="_blank" rel="noopener">AHC Senior centrum Meziboří</a></h3>
+          <div class="place">Meziboří · Ústecký kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 775 182 385</span>
+          <a href="https://www.facebook.com/ahcseniorcentrummezibori" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=mezibori" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=mezibori" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=mezibori" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=mezibori" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=mezibori" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=mezibori" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="region">
+    <div class="region-head">
+      <h2>Královéhradecký kraj</h2>
+      <span class="count">3 zařízení</span>
+    </div>
+    <div class="cards">
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip">Domov pro seniory</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=malacermna" target="_blank" rel="noopener">AHC Senior centrum Malá Čermná</a></h3>
+          <div class="place">Hronov · Královéhradecký kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 491 427 190</span>
+          <a href="https://www.facebook.com/ahcseniorcentrummalacermna" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=malacermna" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=malacermna" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=malacermna" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=malacermna" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=malacermna" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=malacermna" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip">Senior centrum</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=prepychy" target="_blank" rel="noopener">AHC Senior centrum Přepychy</a></h3>
+          <div class="place">Přepychy · Královéhradecký kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 494 322 629</span>
+          <a href="https://www.facebook.com/seniorcentrumprepychy" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=prepychy" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=prepychy" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=prepychy" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=prepychy" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=prepychy" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=prepychy" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip med">Centrum následné péče</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=trutnov" target="_blank" rel="noopener">AHC Centrum následné péče Trutnov</a></h3>
+          <div class="place">Trutnov · Královéhradecký kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 499 812 424</span>
+          <a href="https://www.facebook.com/ahccentrumnaslednepecetrutnov" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=trutnov" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=trutnov" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=trutnov" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=trutnov" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=trutnov" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=trutnov" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="region">
+    <div class="region-head">
+      <h2>Plzeňský kraj</h2>
+      <span class="count">2 zařízení</span>
+    </div>
+    <div class="cards">
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip">Senior centrum</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=stribro" target="_blank" rel="noopener">AHC Senior centrum Stříbro</a></h3>
+          <div class="place">Stříbro · Plzeňský kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 720 853 498</span>
+          <a href="https://www.facebook.com/ahcseniorcentrumstribro" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=stribro" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=stribro" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=stribro" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=stribro" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=stribro" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=stribro" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip">Senior centrum</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=trnova" target="_blank" rel="noopener">AHC Senior centrum Trnová</a></h3>
+          <div class="place">Trnová · Plzeňský kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 725 840 286</span>
+          <span class="nofb">bez Facebooku</span>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=trnova" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=trnova" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=trnova" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=trnova" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=trnova" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=trnova" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="region">
+    <div class="region-head">
+      <h2>Karlovarský · Liberecký · Zlínský kraj</h2>
+      <span class="count">3 zařízení</span>
+    </div>
+    <div class="cards">
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip">Senior centrum</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=novarole" target="_blank" rel="noopener">AHC Senior centrum Nová Role</a></h3>
+          <div class="place">Nová Role · Karlovarský kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 702 294 906</span>
+          <a href="https://www.facebook.com/ahcseniorcentrumnovarole" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=novarole" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=novarole" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=novarole" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=novarole" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=novarole" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=novarole" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip">Senior centrum</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=novybor" target="_blank" rel="noopener">AHC Senior centrum Nový Bor</a></h3>
+          <div class="place">Nový Bor · Liberecký kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 607 043 132</span>
+          <a href="https://www.facebook.com/ahcseniorcentrumnovybor" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=novybor" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=novybor" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=novybor" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=novybor" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=novybor" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=novybor" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <span class="chip med">Odlehčovací centrum</span>
+          <h3><a href="https://ahc-stribro.vercel.app/?branch=vizovice" target="_blank" rel="noopener">AHC Odlehčovací centrum Vizovice</a></h3>
+          <div class="place">Vizovice · Zlínský kraj</div>
+        </div>
+        <div class="meta">
+          <span>+420 737 024 823</span>
+          <a href="https://www.facebook.com/dotekvizovice" target="_blank" rel="noopener">Facebook</a>
+        </div>
+        <div class="links">
+          <a href="https://ahc-stribro.vercel.app/o-nas?branch=vizovice" target="_blank" rel="noopener">O nás</a>
+          <a href="https://ahc-stribro.vercel.app/sluzby?branch=vizovice" target="_blank" rel="noopener">Služby</a>
+          <a href="https://ahc-stribro.vercel.app/dokumenty?branch=vizovice" target="_blank" rel="noopener">Dokumenty</a>
+          <a href="https://ahc-stribro.vercel.app/zadost-o-prijeti?branch=vizovice" target="_blank" rel="noopener">Žádost</a>
+          <a href="https://ahc-stribro.vercel.app/kontakt?branch=vizovice" target="_blank" rel="noopener">Kontakt</a>
+          <a href="https://ahc-stribro.vercel.app/kariera?branch=vizovice" target="_blank" rel="noopener">Kariéra</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <footer>
+    Obsah pochází z klientských dokumentů „Obsah pro podstránky", fotky
+    z Disku Google a soubory ke stažení z příslušných složek. Pobočky bez
+    Facebooku (Pečičky, Podbořany, Trnová) ho nemají uvedený ani v tabulce.
+  </footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+import type { SVGProps } from "react";
+
+interface AhcLogoProps extends SVGProps<SVGSVGElement> {
+  /** Solid: vykreslí celé logo (i křížek) v jedné barvě bez gradientu. */
+  solid?: boolean;
+}
+
+/**
+ * AHC oficiální logo (SVG).
+ * Default: písmena AHC v `currentColor`, křížek v gradient (od průhledné po currentColor).
+ * `solid`: vše v `currentColor` bez gradientu (vhodné pro patičku, jednobarevné kontexty).
+ */
+export function AhcLogo({ className, solid = false, ...props }: AhcLogoProps) {
+  const crossFill = solid ? "currentColor" : "url(#ahc-logo-gradient)";
+  return (
+    <svg
+      viewBox="0 0 150 78"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      role="img"
+      aria-label="AHC"
+      {...props}
+    >
+      <g clipPath="url(#ahc-logo-clip)">
+        <path
+          d="M148.446 28.1135C147.409 27.0787 146.15 26.531 144.67 26.531H123.226V5.31887C123.226 3.84199 122.708 2.58553 121.672 1.55211C120.635 0.517369 119.379 0 117.896 0H103.439C101.959 0 100.7 0.517369 99.6647 1.55079C99.2705 1.94409 98.9505 2.3704 98.7071 2.82837H107.604H117.898C118.632 2.82837 119.161 3.04482 119.668 3.55031C120.176 4.05712 120.392 4.58505 120.392 5.31623V26.5297C120.392 28.0924 121.662 29.3594 123.227 29.3594H144.672C145.374 29.3594 145.92 29.5917 146.442 30.113C146.956 30.6238 147.165 31.1253 147.165 31.8459V46.1316C147.165 46.8628 146.948 47.3921 146.441 47.8989C145.935 48.4044 145.406 48.6195 144.672 48.6195H123.227C121.662 48.6195 120.392 49.8865 120.392 51.4492V72.6798C120.392 73.4123 120.175 73.9402 119.67 74.4444C119.162 74.9499 118.633 75.1664 117.899 75.1664H103.441C102.716 75.1664 102.17 74.9433 101.67 74.4444C101.17 73.9455 100.946 73.4004 100.946 72.6785V51.4479C100.946 49.8852 99.6766 48.6182 98.1106 48.6182H37.967H0.00146484V51.4479H98.1106V72.6785C98.1106 74.1554 98.6291 75.4118 99.6647 76.4466C100.702 77.48 101.961 77.996 103.441 77.996H117.899C119.38 77.996 120.638 77.48 121.675 76.4466C122.712 75.4118 123.229 74.1554 123.229 72.6785V51.4479H144.673C146.154 51.4479 147.412 50.9318 148.449 49.8971C149.484 48.8624 150.003 47.6085 150.003 46.1303V31.8446C150.003 30.3664 149.487 29.1429 148.449 28.1095L148.446 28.1135Z"
+          fill={crossFill}
+        />
+        <path
+          d="M27.5861 34.2374H13.8697L11.2537 40.5541H4.24808L17.4155 11.0746H24.1672L37.377 40.5541H30.2021L27.5861 34.2374ZM25.4342 29.0571L20.7497 17.77L16.0652 29.0571H25.4342Z"
+          fill="currentColor"
+        />
+        <path
+          d="M67.5513 11.0746V40.5541H60.715V28.4672H47.2949V40.5541H40.4586V11.0746H47.2949V22.6982H60.715V11.0746H67.5513Z"
+          fill="currentColor"
+        />
+        <path
+          d="M72.6987 25.8143C72.6987 16.928 79.5351 10.5691 88.7348 10.5691C93.8413 10.5691 98.1039 12.4221 100.889 15.7916L96.4996 19.8342C94.5158 17.5602 92.0267 16.3803 89.0721 16.3803C83.5438 16.3803 79.6184 20.2553 79.6184 25.8143C79.6184 31.3734 83.5438 35.2484 89.0721 35.2484C92.0267 35.2484 94.5158 34.0685 96.4996 31.7522L100.889 35.7948C98.1039 39.2066 93.8413 41.0596 88.6925 41.0596C79.5351 41.0596 72.6974 34.7007 72.6974 25.8143H72.6987Z"
+          fill="currentColor"
+        />
+      </g>
+      <defs>
+        {!solid ? (
+          <linearGradient
+            id="ahc-logo-gradient"
+            x1="0.000142279"
+            y1="39.0007"
+            x2="150"
+            y2="39.0007"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="currentColor" stopOpacity="0" />
+            <stop offset="0.06" stopColor="currentColor" stopOpacity="0.2" />
+            <stop offset="0.2" stopColor="currentColor" stopOpacity="0.63" />
+            <stop offset="0.31" stopColor="currentColor" stopOpacity="0.9" />
+            <stop offset="0.37" stopColor="currentColor" />
+          </linearGradient>
+        ) : null}
+        <clipPath id="ahc-logo-clip">
+          <rect width="150" height="78" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}

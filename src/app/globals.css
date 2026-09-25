@@ -1,26 +1,468 @@
 @import "tailwindcss";
 
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-brand: hsl(var(--brand));
+  --color-brand-foreground: hsl(var(--brand-foreground));
+  --color-brand-dark: hsl(var(--brand-dark));
+  --color-brand-light: hsl(var(--brand-light));
+
+  --color-warm: hsl(var(--warm));
+  --color-warm-foreground: hsl(var(--warm-foreground));
+  --color-warm-dark: hsl(var(--warm-dark));
+  --color-warm-light: hsl(var(--warm-light));
+
+  --font-sans: var(--font-sans);
+  --font-display: var(--font-sans);
+  --radius: 0.75rem;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand: #245C69 — petrolejové teal */
+  --brand: 189 49% 28%;
+  --brand-dark: 189 50% 20%;
+  --brand-light: 189 30% 92%;
+  --brand-foreground: 24 33% 98%;
+
+  /* Warm: #FC9663 — vibrant coral/orange */
+  --warm: 17 96% 69%;
+  --warm-dark: 17 80% 55%;
+  --warm-light: 17 90% 95%;
+  --warm-foreground: 189 50% 14%;
+
+  /* Background: čistá bílá */
+  --background: 0 0% 100%;
+  --foreground: 189 50% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 189 50% 14%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 189 50% 14%;
+  --primary: 189 49% 28%;
+  --primary-foreground: 24 33% 98%;
+  --secondary: 24 28% 95%;
+  --secondary-foreground: 189 50% 14%;
+  --muted: 24 28% 95%;
+  --muted-foreground: 189 12% 38%;
+  --accent: 17 90% 95%;
+  --accent-foreground: 17 80% 40%;
+  --destructive: 0 72% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 24 18% 88%;
+  --input: 24 18% 88%;
+  --ring: 189 49% 28%;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  border-color: hsl(var(--border));
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  /* Larger base — senior audience */
+  font-size: 16px;
+  overflow-x: clip;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+/* Display = stejný font (Montserrat) ale tighter tracking */
+.font-display {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+
+/* Focus ring — visible pro keyboard nav (a11y) */
+*:focus-visible {
+  outline: 3px solid hsl(var(--brand) / 0.5);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Reduced motion respect */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 17px;
+  }
+}
+
+::selection {
+  background-color: hsl(var(--warm) / 0.3);
+  color: hsl(var(--brand-dark));
+}
+
+/* ── Animations ──────────────────────────────────────────────── */
+
+@keyframes float-slow {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -18px, 0); }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(8px, -12px, 0); }
+}
+
+@keyframes pulse-blob {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.08); }
+}
+
+@keyframes drift-x {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(20px, 0, 0); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+.animate-float-slow {
+  animation: float-slow 9s ease-in-out infinite;
+}
+.animate-float-medium {
+  animation: float-medium 6s ease-in-out infinite;
+}
+.animate-pulse-blob {
+  animation: pulse-blob 8s ease-in-out infinite;
+}
+.animate-drift-x {
+  animation: drift-x 11s ease-in-out infinite;
+}
+.animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Stagger pomocí inline `style={{ animationDelay: 'Xms' }}` na .animate-fade-up */
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-slow,
+  .animate-float-medium,
+  .animate-pulse-blob,
+  .animate-drift-x,
+  .animate-fade-up {
+    animation: none !important;
+  }
+}
+
+/* Scrollbar hide pro carousely */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   Teamio / Capybara widget (kariéra) — přebarvení do AHC brandu
+   ──────────────────────────────────────────────────────────────── */
+#capybara {
+  font-family: inherit;
+  color: hsl(var(--foreground));
+}
+
+/* Filtr (vyhledávání) */
+#capybara .cp-filter {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+#capybara .cp-filter__title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: hsl(var(--warm-dark));
+  margin: 0 0 1.1rem;
+}
+#capybara .cp-filter__content,
+#capybara .cp-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+#capybara .cp-filter__item {
+  flex: 1 1 220px;
+}
+#capybara .cp-filter__select-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 0.45rem;
+}
+#capybara .cp-filter__select,
+#capybara select {
+  width: 100%;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.95rem;
+  background: hsl(var(--muted) / 0.5);
+  font-size: 0.95rem;
+  color: hsl(var(--foreground));
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+#capybara .cp-filter__select:focus,
+#capybara select:focus {
+  outline: none;
+  border-color: hsl(var(--brand));
+  background: hsl(var(--card));
+  box-shadow: 0 0 0 3px hsl(var(--brand) / 0.18);
+}
+
+/* Tlačítko Hledat */
+#capybara .cp-button--submit,
+#capybara .cp-button__wrapper--filter button {
+  background: hsl(var(--brand));
+  color: hsl(var(--brand-foreground));
+  border: none;
+  border-radius: 9999px;
+  padding: 0.78rem 1.8rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px -6px hsl(var(--brand) / 0.5);
+}
+#capybara .cp-button--submit:hover,
+#capybara .cp-button__wrapper--filter button:hover {
+  background: hsl(var(--brand-dark));
+}
+
+/* Seznam pozic */
+#capybara .cp-jobs__list,
+#capybara .cp-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+#capybara .cp-job {
+  border: 1px solid hsl(var(--border));
+  border-radius: 1rem;
+  background: hsl(var(--card));
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+#capybara .cp-job:hover {
+  border-color: hsl(var(--brand) / 0.4);
+  box-shadow: 0 10px 28px -12px rgb(0 0 0 / 0.18);
+  transform: translateY(-2px);
+}
+#capybara .cp-job__link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1rem;
+  padding: 1.15rem 1.4rem;
+  text-decoration: none;
+}
+#capybara .cp-job__main {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+#capybara .cp-job__name {
+  font-family: var(--font-display, inherit);
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: hsl(var(--foreground));
+  transition: color 0.2s;
+}
+#capybara .cp-job:hover .cp-job__name {
+  color: hsl(var(--brand));
+}
+#capybara .cp-job__locality {
+  background: hsl(var(--brand-light));
+  color: hsl(var(--brand));
+  font-weight: 600;
+  font-size: 0.74rem;
+  padding: 0.18rem 0.65rem;
+  border-radius: 9999px;
+}
+#capybara .cp-job__employment-type,
+#capybara .cp-job__profession,
+#capybara .cp-job__company {
+  font-size: 0.85rem;
+  color: hsl(var(--muted-foreground));
+}
+#capybara .cp-job__locality:empty,
+#capybara .cp-job__employment-type:empty,
+#capybara .cp-job__profession:empty,
+#capybara .cp-job__company:empty {
+  display: none;
+}
+
+/* Detail pozice */
+#capybara .cp-detail__header-title h1 {
+  font-family: var(--font-display, inherit);
+  font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+  font-weight: 800;
+  color: hsl(var(--foreground));
+  margin-bottom: 0.5rem;
+}
+#capybara .cp-detail__content {
+  line-height: 1.75;
+  color: hsl(var(--muted-foreground));
+}
+#capybara .cp-detail__content strong {
+  color: hsl(var(--foreground));
+}
+#capybara .cp-info__basic-list {
+  list-style: none;
+  margin: 1.25rem 0;
+  padding: 1.25rem;
+  display: grid;
+  gap: 0.6rem;
+  background: hsl(var(--muted) / 0.5);
+  border: 1px solid hsl(var(--border));
+  border-radius: 1rem;
+}
+#capybara .cp-info__item-link,
+#capybara .cp-detail a {
+  color: hsl(var(--brand));
+  font-weight: 600;
+}
+#capybara .cp-button--apply,
+#capybara .cp-detail button[type="submit"] {
+  background: hsl(var(--warm));
+  color: hsl(var(--warm-foreground));
+  border: none;
+  border-radius: 9999px;
+  padding: 0.85rem 2rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ── Zpětná vazba: nadpis sekce vs nadpis pozice ────────────────
+   "Aktuálně otevřené pozice" má být větší než název inzerátu.     */
+#capybara h1,
+#capybara h2,
+#capybara .cp-jobs__title,
+#capybara .cp-widget__title {
+  font-size: clamp(1.5rem, 3vw, 2rem) !important;
+  font-weight: 800;
+  color: hsl(var(--foreground));
+  margin-bottom: 1.25rem;
+}
+#capybara .cp-job__name,
+#capybara .cp-offer__name {
+  font-size: 1rem !important;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+/* Mezery mezi odstavci v popisu pozice (10–16px) */
+#capybara .cp-detail__content p,
+#capybara .cp-offer__description p,
+#capybara [class*="description"] p {
+  margin-bottom: 0.75rem;
+}
+#capybara .cp-detail__content ul,
+#capybara .cp-offer__description ul {
+  margin-bottom: 0.75rem;
+  padding-left: 1.4rem;
+}
+#capybara .cp-detail__content li,
+#capybara .cp-offer__description li {
+  margin-bottom: 0.3rem;
+}
+
+/* "Typ úvazku" štítek — menší margin */
+#capybara .cp-job__tags,
+#capybara .cp-job__info,
+#capybara [class*="employment"],
+#capybara [class*="contract-type"] {
+  margin-top: 0.25rem !important;
+}
+
+/* Odsazení tlačítka a textu ve výpisu pozic */
+#capybara .cp-job__link {
+  padding: 1rem 1.25rem;
+}
+#capybara .cp-apply-btn,
+#capybara [class*="apply"] button,
+#capybara .cp-button--apply {
+  margin-top: 0.5rem;
+}
+
+/* „Powered by" — decentně */
+#capybara .cp-brand {
+  margin-top: 1.5rem;
+  font-size: 0.72rem;
+}
+#capybara .cp-brand__link {
+  color: hsl(var(--muted-foreground) / 0.7);
+}
+
+/* ── Inline editor obsahu ──────────────────────────────────────────────
+   Přepisovatelná pole v režimu úprav. Rámeček je uvnitř (inset), aby se
+   při zapnutí editace neposunul layout stránky. */
+.ahc-editable {
+  outline: 1px dashed hsl(var(--brand) / 0.45);
+  outline-offset: 2px;
+  border-radius: 4px;
+  cursor: text;
+  transition: outline-color 0.15s ease, background-color 0.15s ease;
+}
+
+.ahc-editable:hover {
+  outline-color: hsl(var(--brand) / 0.8);
+  background-color: hsl(var(--brand-light) / 0.4);
+}
+
+.ahc-editable:focus {
+  outline: 2px solid hsl(var(--brand));
+  background-color: hsl(var(--brand-light) / 0.55);
 }
