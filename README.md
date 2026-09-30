@@ -13,6 +13,25 @@ Multi-tenant web pro síť senior center AHC. Jeden Next.js codebase + jeden Con
 
 Když přidáš pobočku v Convexu (tabulka `branches`), automaticky se objeví v sekci „Další pobočky" ve footeru všech webů, v globálním seznamu a v globální kariéře.
 
+## Nasazení na vlastní Vercel
+
+Projekt je běžná Next.js aplikace — Vercel si ji pozná sám, nic se nenastavuje
+ručně (framework Next.js, build `next build`, root adresář je tenhle).
+
+Potřeba jsou tři proměnné prostředí v Production:
+
+| Proměnná | K čemu je |
+|---|---|
+| `NEXT_PUBLIC_CONVEX_URL` | adresa Convex backendu, ze kterého se čtou data |
+| `CONVEX_SITE_URL` | HTTP endpoint téhož Convexu (přihlašování do administrace) |
+| `NEXT_PUBLIC_DEV_BRANCH_SLUG` | výchozí pobočka, když adresa neurčuje jinou |
+
+Hodnoty nejsou v repu — vyžádejte si je, backend je společný pro všechny weby
+sítě. Bez nich se aplikace postaví, ale nenačte žádný obsah.
+
+Pobočka se určuje z adresy: na vlastní doméně ze subdomény, na `*.vercel.app`
+z parametru `?branch=<slug>` (např. `?branch=sedlec-prcice`).
+
 ## Setup (poprvé)
 
 ```bash
