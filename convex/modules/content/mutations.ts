@@ -56,6 +56,7 @@ const EDITABLE_TEXT: Partial<Record<TableNames, readonly string[]>> = {
     "email",
   ],
   branch_career_perks: ["title", "description"],
+  branch_news: ["title", "excerpt"],
   branch_admission_steps: ["title", "description"],
 } as const;
 
