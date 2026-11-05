@@ -154,6 +154,13 @@ export default defineSchema({
     ),
     name: v.string(),
     description: v.optional(v.string()),
+    // Obsah detailu oddělení/ambulance. Starší pobočky nic z toho nemají —
+    // detail pak ukáže jen to, co je vyplněné.
+    body: v.optional(v.string()),
+    lead_doctor: v.optional(v.string()),
+    hours: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    email: v.optional(v.string()),
     icon: v.optional(v.string()),
     slug: v.optional(v.string()),
     order: v.number(),

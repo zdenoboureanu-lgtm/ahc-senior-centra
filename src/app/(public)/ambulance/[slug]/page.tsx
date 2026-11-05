@@ -3,6 +3,7 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { getBranchSlugFromHeaders } from "@/common/lib/branch";
 import { UnitDetailView } from "@/features/branch-home/components/unit-detail-view";
+import { loadBranchPageContext } from "@/features/inline-edit/load-copy";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -28,11 +29,15 @@ export default async function AmbulanceDetailPage({ params }: PageProps) {
 
   if (!data) notFound();
 
+  const ctx = await loadBranchPageContext(branchSlug);
+
   return (
     <UnitDetailView
       branch={data.branch}
       unit={data.unit}
       related={data.related}
+      copy={ctx.copy}
+      editBranchId={ctx.editBranchId}
     />
   );
 }
