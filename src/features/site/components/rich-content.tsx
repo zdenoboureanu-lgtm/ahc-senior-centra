@@ -1,6 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Check, Mail, Phone, Quote } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  ChevronDown,
+  Mail,
+  Phone,
+  Quote,
+} from "lucide-react";
 import { SectionNav } from "./section-nav";
 import { iconForHeading } from "./block-icon";
 import {
@@ -189,7 +196,15 @@ function toRuns(blocks: IndexedBlock[]): IndexedBlock[][] {
 function isTagList(bullets: string[]): boolean {
   if (bullets.length < 3) return false;
   const words = bullets.map((b) => b.trim().split(/\s+/).length);
-  return words.every((w) => w <= 3);
+  return words.every((w) => w <= 2);
+}
+
+/**
+ * Dlouhé výčty (přes deset položek) Sedlec sbaluje do rozklikávacího bloku,
+ * ať pod nadpisem neleží stěna textu.
+ */
+function isLongList(bullets: string[]): boolean {
+  return bullets.length > 10;
 }
 
 function Paragraphs({
@@ -239,22 +254,22 @@ function Features({
         const Icon = iconForHeading(b.heading);
         return (
           <RegionSlot key={b._i} {...(regions?.block(b) ?? {})}>
-            <div className="h-full rounded-2xl border border-border bg-card p-6">
-              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-light text-brand">
-                <Icon className="h-6 w-6" strokeWidth={1.75} />
-              </span>
-              <TextSlot
-                as="h3"
-                target={path(editPageId, `blocks.${b._i}.heading`)}
-                value={b.heading ?? ""}
-                className="font-display mt-4 block text-lg text-foreground"
-              />
+            <div className="rounded-2xl border border-border bg-card p-6">
+              <div className="flex items-center gap-3">
+                <Icon className="h-6 w-6 shrink-0 text-brand" strokeWidth={1.75} />
+                <TextSlot
+                  as="h4"
+                  target={path(editPageId, `blocks.${b._i}.heading`)}
+                  value={b.heading ?? ""}
+                  className="font-display text-lg text-foreground"
+                />
+              </div>
               {b.text ? (
                 <TextSlot
                   as="p"
                   target={path(editPageId, `blocks.${b._i}.text`)}
                   value={b.text}
-                  className="mt-2 block text-[15px] leading-relaxed text-muted-foreground"
+                  className="mt-3 block text-[15px] leading-relaxed text-muted-foreground"
                 />
               ) : null}
             </div>
@@ -281,7 +296,7 @@ function Bullets({
   lead?: IndexedBlock;
   editPageId?: string;
   regions?: Regions;
-  /** Ve dvou sloupcích; vedle fotky se vypíná, aby se text nelámal. */
+  /** Přes celou šířku sekce; vedle fotky se vypíná a použije se úsporný vzor. */
   columns?: boolean;
 }) {
   const items = blocks.flatMap((b) =>
@@ -292,53 +307,78 @@ function Bullets({
     }))
   );
   if (items.length === 0) return null;
+
   const tags = isTagList(items.map((i) => i.text));
+  const long = isLongList(items.map((i) => i.text));
   const leadEl = lead?.text ? (
     <TextSlot
-      as="p"
+      as="h3"
       target={path(editPageId, `blocks.${lead._i}.text`)}
-      value={lead.text}
-      className="font-display mb-5 block text-lg text-foreground"
+      value={lead.text.replace(/\s*:\s*$/, "")}
+      className="font-display mb-6 block text-2xl text-foreground"
     />
   ) : null;
 
+  /** Úsporná dlaždice s tečkou — Sedlec ji má uvnitř rozbalovacích bloků. */
+  const chip = (it: (typeof items)[number]) => (
+    <li
+      key={it.key}
+      className="flex items-center gap-2 rounded-xl border border-border bg-card p-3 text-sm text-foreground"
+    >
+      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
+      <TextSlot target={path(editPageId, it.path)} value={it.text} />
+    </li>
+  );
+
   return (
     <RegionSlot {...(regions?.block(blocks[0]) ?? {})}>
-      <div className={columns ? "mx-auto max-w-4xl" : undefined}>
+      <div>
         {leadEl}
         {tags ? (
           <ul className="flex flex-wrap gap-2">
             {items.map((it) => (
               <li
                 key={it.key}
-                className="rounded-full bg-brand-light px-3 py-1.5 text-xs font-semibold text-brand"
+                className="inline-flex items-center rounded-full bg-brand-light px-3 py-1 text-xs font-semibold text-brand"
               >
                 <TextSlot target={path(editPageId, it.path)} value={it.text} />
               </li>
             ))}
           </ul>
-        ) : (
-          <ul
-            className={
-              columns && items.length > 4
-                ? "grid gap-x-10 gap-y-4 sm:grid-cols-2"
-                : "space-y-4"
-            }
-          >
-            {items.map((it) => (
-              <li key={it.key} className="flex gap-3">
-                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-brand-foreground">
-                  <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
-                </span>
-                <TextSlot
-                  as="span"
-                  target={path(editPageId, it.path)}
-                  value={it.text}
-                  className="text-[15px] leading-relaxed text-foreground sm:text-base"
-                />
-              </li>
-            ))}
+        ) : long ? (
+          <details className="group rounded-2xl border border-border bg-card p-5 [&_summary]:list-none">
+            <summary className="flex cursor-pointer items-center justify-between gap-3">
+              <span className="font-display text-lg text-foreground">
+                Zobrazit celý přehled ({items.length})
+              </span>
+              <ChevronDown className="h-5 w-5 shrink-0 text-brand transition-transform group-open:rotate-180" />
+            </summary>
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2">{items.map(chip)}</ul>
+          </details>
+        ) : columns ? (
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {items.map((it) => {
+              const Icon = iconForHeading(it.text);
+              return (
+                <li
+                  key={it.key}
+                  className="flex items-start gap-3 rounded-2xl border border-border bg-card p-5"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-light text-brand">
+                    <Icon className="h-5 w-5" strokeWidth={1.75} />
+                  </span>
+                  <TextSlot
+                    as="span"
+                    target={path(editPageId, it.path)}
+                    value={it.text}
+                    className="text-[15px] font-medium text-foreground"
+                  />
+                </li>
+              );
+            })}
           </ul>
+        ) : (
+          <ul className="grid gap-2 sm:grid-cols-2">{items.map(chip)}</ul>
         )}
       </div>
     </RegionSlot>
@@ -819,7 +859,8 @@ export function RichContent({
     .filter(
       ({ sec }) =>
         sec.heading &&
-        sec.blocks.length > 0 &&
+        sec.blocks[0]?.type === "paragraph" &&
+        !sec.blocks[0].text?.trim().endsWith(":") &&
         sec.blocks.every((b) => b.type === "paragraph" || b.type === "list")
     )
     .slice(0, pool.length);
@@ -1037,6 +1078,20 @@ export function RichContent({
             ? path(editPageId, `blocks.${section.headingIndex}.text`)
             : undefined;
 
+        // Vedle fotky nechává Sedlec jen úvodní text; výčty a karty jdou pod
+        // pruh přes celou šířku, kde se vejdou jako kartičky s ikonkou.
+        let cut = section.blocks.findIndex((b) => b.type !== "paragraph");
+        // Uvozovací věta („Co služba zahrnuje:") patří ke svému výčtu —
+        // jinak by zůstala u fotky a seznam pod ní by přišel o nadpis.
+        if (cut > 0) {
+          const prev = section.blocks[cut - 1];
+          if (prev.type === "paragraph" && prev.text?.trim().endsWith(":")) {
+            cut -= 1;
+          }
+        }
+        const beside = cut === -1 ? section.blocks : section.blocks.slice(0, cut);
+        const below = cut === -1 ? [] : section.blocks.slice(cut);
+
         // Textová sekce s fotkou: nadpis, odstavce a odrážky vlevo, fotka vedle.
         if (photo?.src) {
           return (
@@ -1044,10 +1099,10 @@ export function RichContent({
               <RegionSlot {...regions.section(section.headingBlock)}>
                 <section
                   id={anchorId(section.heading)}
-                  className={`scroll-mt-32 ${tinted ? "bg-secondary/40" : ""}`}
+                  className={`scroll-mt-32 ${tinted ? "bg-secondary/30" : ""}`}
                 >
                   <div
-                    className={`${wrap} grid items-center gap-10 ${band} lg:grid-cols-2 lg:gap-14`}
+                    className={`${wrap} grid items-center gap-10 py-16 lg:grid-cols-2`}
                   >
                     <div className={photo.flip ? "lg:order-2" : undefined}>
                       {section.heading ? (
@@ -1059,7 +1114,7 @@ export function RichContent({
                         />
                       ) : null}
                       <div className="mt-5 space-y-6">
-                        {renderRuns(section, false)}
+                        {renderRuns({ ...section, blocks: beside }, false)}
                       </div>
                     </div>
                     <div
@@ -1079,6 +1134,13 @@ export function RichContent({
                       />
                     </div>
                   </div>
+                  {below.length > 0 ? (
+                    <div className={`${wrap} pb-16`}>
+                      <div className="space-y-8">
+                        {renderRuns({ ...section, blocks: below }, true)}
+                      </div>
+                    </div>
+                  ) : null}
                 </section>
               </RegionSlot>
               {navHere}
@@ -1091,7 +1153,7 @@ export function RichContent({
             <RegionSlot {...regions.section(section.headingBlock)}>
               <section
                 id={anchorId(section.heading)}
-                className={`scroll-mt-32 ${tinted ? "bg-secondary/40" : ""}`}
+                className={`scroll-mt-32 ${tinted ? "bg-secondary/30" : ""}`}
               >
                 <div className={`${wrap} ${band}`}>
                   {section.heading ? (
