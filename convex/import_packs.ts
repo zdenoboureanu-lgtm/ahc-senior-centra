@@ -425,3 +425,84 @@ export const backfillBlockUids = mutation({
     return { pages: pages.length, pagesTouched, markersMoved };
   },
 });
+
+/**
+ * Import textů k oddělením a ambulancím.
+ *
+ * Obsah detailu jednotky držíme jako článkovou podstránku (`branch_pages`
+ * s klíčem `unit:<slug>`), ne jako další pole na `branch_units` — díky tomu
+ * se vykresluje stejným rendererem jako ostatní podstránky a klient ho může
+ * upravovat, skrývat i duplikovat po blocích, bez nové mutace.
+ *
+ * Použití:
+ *   bunx convex run --prod import_packs:importUnitPages "$(cat unit-pages.json)"
+ */
+export const importUnitPages = mutation({
+  args: {
+    slug: v.string(),
+    pages: v.array(
+      v.object({
+        unit_slug: v.string(),
+        blocks: v.array(
+          v.object({
+            type: v.string(),
+            text: v.optional(v.string()),
+            heading: v.optional(v.string()),
+            bullets: v.optional(v.array(v.string())),
+          })
+        ),
+      })
+    ),
+  },
+  handler: async (ctx, { slug, pages }) => {
+    const branch = await ctx.db
+      .query("branches")
+      .withIndex("by_slug", (q) => q.eq("slug", slug))
+      .unique();
+    if (!branch) throw new Error(`Pobočka „${slug}" neexistuje.`);
+
+    const now = Date.now();
+    let vytvoreno = 0;
+    let prepsano = 0;
+    const preskoceno: string[] = [];
+
+    for (const p of pages) {
+      const jednotka = await ctx.db
+        .query("branch_units")
+        .withIndex("by_branch", (q) => q.eq("branch_id", branch._id))
+        .filter((q) => q.eq(q.field("slug"), p.unit_slug))
+        .first();
+      if (!jednotka) {
+        preskoceno.push(p.unit_slug);
+        continue;
+      }
+
+      const klic = `unit:${p.unit_slug}`;
+      const blocks = p.blocks.map((b) => ({
+        ...b,
+        uid: Math.random().toString(36).slice(2, 10),
+      }));
+
+      const stary = await ctx.db
+        .query("branch_pages")
+        .withIndex("by_branch", (q) => q.eq("branch_id", branch._id))
+        .filter((q) => q.eq(q.field("page"), klic))
+        .first();
+
+      if (stary) {
+        await ctx.db.patch(stary._id, { blocks, updated_at: now });
+        prepsano++;
+      } else {
+        await ctx.db.insert("branch_pages", {
+          branch_id: branch._id,
+          page: klic,
+          blocks,
+          updated_at: now,
+        });
+        vytvoreno++;
+      }
+    }
+
+    return { vytvoreno, prepsano, preskoceno };
+  },
+});

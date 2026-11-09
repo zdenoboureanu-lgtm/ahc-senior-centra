@@ -9,11 +9,19 @@ import {
 import { EditOnly } from "@/features/inline-edit/components/edit-only";
 import { makeCopy, type CopyProps } from "@/features/inline-edit/copy";
 import type { EditTarget } from "@/features/inline-edit/edit-mode-context";
+import {
+  RichContent,
+  type RichPage,
+} from "@/features/site/components/rich-content";
 
 interface Props extends CopyProps {
   branch: Branch;
   unit: BranchUnit;
   related: BranchUnit[];
+  /** Článkový obsah jednotky (`branch_pages`, klíč `unit:<slug>`). */
+  page?: (RichPage & { _id: string }) | null;
+  /** ID podstránky pro editor — vyplněné jen přihlášenému správci. */
+  editPageId?: string;
 }
 
 function getIcon(name?: string): Icons.LucideIcon {
@@ -53,6 +61,8 @@ export function UnitDetailView({
   branch,
   unit,
   related,
+  page,
+  editPageId,
   copy,
   editBranchId,
 }: Props) {
@@ -91,6 +101,7 @@ export function UnitDetailView({
 
   const phone = unit.phone ?? branch.phone;
   const email = unit.email ?? branch.email;
+  const maArticle = Boolean(page && page.blocks.length > 0);
 
   return (
     <>
@@ -174,9 +185,13 @@ export function UnitDetailView({
       </section>
 
       {/* Obsah */}
-      <section className={`${wrap} py-16 lg:py-20`}>
-        <div className="grid gap-10 lg:grid-cols-3">
-          <div className="lg:col-span-2">
+      <section className={`${wrap} ${maArticle ? "pt-10" : "py-16 lg:py-20"}`}>
+        <div
+          className={
+            maArticle ? "grid gap-4 md:grid-cols-3" : "grid gap-10 lg:grid-cols-3"
+          }
+        >
+          <div className={maArticle ? "hidden" : "lg:col-span-2"}>
             {c.t(
               `oddeleni.detail.nadpis`,
               `O ${unit.category === "oddeleni" ? "oddělení" : "pracovišti"}`,
@@ -215,7 +230,7 @@ export function UnitDetailView({
             )}
           </div>
 
-          <aside className="space-y-4">
+          <aside className={maArticle ? "contents" : "space-y-4"}>
             <div className="rounded-2xl border border-border bg-card p-6">
               <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-warm-dark">
                 Ordinační hodiny
@@ -273,6 +288,17 @@ export function UnitDetailView({
           </aside>
         </div>
       </section>
+
+      {/* Texty oddělení / ambulance — stejný renderer jako ostatní podstránky,
+          takže se obsah od klienta vykreslí v sedleckém vzhledu. */}
+      {page && page.blocks.length > 0 ? (
+        <RichContent
+          page={page}
+          editPageId={editPageId}
+          editBranchId={editBranchId}
+          copy={copy}
+        />
+      ) : null}
 
       {/* Související pracoviště */}
       {related.length > 0 ? (
